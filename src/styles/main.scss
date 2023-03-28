@@ -2,6 +2,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-weight: 600;
 }
 
 a {
@@ -10,6 +11,7 @@ a {
 }
 
 .block-news {
+  background-color: rgb(0 0 0 / 80%);
   display: flex;
   gap: 10px;
   flex-direction: column;
@@ -18,10 +20,19 @@ a {
   max-width: 300px;
   margin: 0 auto;
   padding: 10px 20px;
-  box-shadow: 1px 1px 4px 11px rgba(0, 0, 0, 0.075);
+  box-shadow: 1px 1px 4px 11px rgb(0 0 0 / 8%);
+  transition: 1s;
+  color: white;
+
+  &:hover {
+    transition: 500;
+    color: white;
+    background-color: rgba(15, 15, 15, 0.596);
+  }
 }
 
 .gif-loading {
+  position: fixed;
   width: 300px;
 }
 
@@ -29,4 +40,167 @@ a {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.only-news {
+  color: white;
+  word-break: break-all;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.61);
+  border: 1px solid rgb(255, 255, 255);
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  padding: 10px 15px;
+}
+
+.App {
+  background-image: url("./bg-hacker.jpg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.Main {
+  max-width: 1440px;
+  min-height: 1080px;
+  padding: 10px;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 300px 300px 300px;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.gif-block {
+  display: flex;
+  justify-content: center;
+}
+
+.personal-page {
+  display: flex;
+  min-height: auto;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  min-height: 100vh;
+}
+
+
+
+.personal-page__buttons {
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+}
+
+
+
+.comment {
+  border: 1px solid white;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: black;
+}
+
+.comment__show-more {
+  padding: 10px 25px;
+  border: none;
+  background-color: #19a2dd;
+  color: white;
+  margin: 10px 0;
+  transition: 200ms;
+
+  &:hover {
+    transition: 400ms;
+    cursor: pointer;
+    background-color: #6ccdf7;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.comment-kid {
+  padding: 5px;
+  position: relative;
+}
+
+.btn-toUp {
+  position: fixed;
+  top: 4%;
+  left: 2%;
+  padding: 10px 25px;
+  background-color: #000000;
+  transition: 200ms;
+  border: 1px solid white;
+  color: white;
+
+  &:hover {
+    transition: 400ms;
+    cursor: pointer;
+  border: 1px solid rgb(0, 0, 0);
+  color: black;
+    background-color: #ffffff;
+  }
+}
+
+.personal-page__btn {
+  @extend .btn-toUp;
+  position: static; 
+  padding: 10px 30px;
+}
+
+.btn-main {
+  @extend .btn-toUp;
+  right: 5%;
+  top: 20px;
+  position: fixed;
+  padding: 15px 20px;
+  left: auto;
+}
+
+.gif__loading-page {
+  width: 300px;
+  text-align: center;
+}
+
+
+
+@media (max-width: 1000px) {
+  .Main {
+    padding: 10px;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 300px 300px;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 auto;
+  }
+
+  .btn-main {
+    padding: 10px 10px;
+    right: 0;
+  }
+}
+
+@media (max-width: 660px) {
+  .Main {
+    padding: 10px;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 300px;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 auto;
+  }
+
+  .btn-toUp {
+    top: 4%;
+    padding: 10px 10px;
+  }
 }
