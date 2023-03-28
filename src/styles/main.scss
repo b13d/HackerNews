@@ -1,0 +1,32 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.block-news {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  border: 1px solid rgb(236, 236, 236);
+  border-radius: 8px;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  box-shadow: 1px 1px 4px 11px rgba(0, 0, 0, 0.075);
+}
+
+.gif-loading {
+  width: 300px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
