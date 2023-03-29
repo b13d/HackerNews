@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import moment from "moment";
 
@@ -187,26 +187,40 @@ const Page = (url?: any) => {
             <Link to="/">Вернуться на главную</Link>
           </button>
         </div>
-        <div className="only-news">
-          <p>
-            url:{" "}
-            <a target="_blank" href={news.url}>
-              {news.url}
-            </a>
-          </p>
+        {news.url === "" ? (
+          <div>
+            <img className="gif__loading-page" src="/loading.gif" />
+          </div>
+        ) : (
+          <div className="only-news">
+            <p>
+              url:{" "}
+              <a target="_blank" href={news.url}>
+                {news.url}
+              </a>
+            </p>
 
-          <p>title: {news.title}</p>
-          <p>
-            date:
-            {moment
-              .utc(Number(news.date) * 1000)
-              .format("MMMM Do YYYY, h:mm:ss a")}
-          </p>
-          <p>author: {news.author}</p>
-          <p>countComments: {news.countComments}</p>
-          {news.listComments !== undefined && news.listComments.length > 0 && comments.length === 0 ? <div><img className="gif__loading-page" src="/loading.gif" /></div> : ""}
-          <>{comments}</>
-        </div>
+            <p>title: {news.title}</p>
+            <p>
+              date:
+              {moment
+                .utc(Number(news.date) * 1000)
+                .format("MMMM Do YYYY, h:mm:ss a")}
+            </p>
+            <p>author: {news.author}</p>
+            <p>countComments: {news.countComments}</p>
+            {news.listComments !== undefined &&
+            news.listComments.length > 0 &&
+            comments.length === 0 ? (
+              <div>
+                <img className="gif__loading-page" src="/loading.gif" />
+              </div>
+            ) : (
+              ""
+            )}
+            <>{comments}</>
+          </div>
+        )}
       </section>
     </>
   );
