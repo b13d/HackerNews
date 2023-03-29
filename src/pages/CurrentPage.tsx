@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, {useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import moment from "moment";
 
 const Page = (url?: any) => {
@@ -49,10 +49,6 @@ const Page = (url?: any) => {
       countComments: "",
       listComments: [],
     });
-  };
-
-  const handleClickReturn = () => {
-    navigate("/");
   };
 
   const handleClickUp = () => {
@@ -187,8 +183,8 @@ const Page = (url?: any) => {
           <button onClick={handleClickUpdate} className="personal-page__btn">
             Обновить комментарии
           </button>
-          <button onClick={handleClickReturn} className="personal-page__btn">
-            Вернуться на главную
+          <button className="personal-page__btn">
+            <Link to="/">Вернуться на главную</Link>
           </button>
         </div>
         <div className="only-news">
