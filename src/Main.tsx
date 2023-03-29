@@ -28,7 +28,7 @@ function Main() {
     let arr: INewsItem[] = [];
 
     await responseItems.data.map((value: number, index: number) => {
-      if (index < 100) CreateItems(value, arr, index);
+      if (index < 150) CreateItems(value, arr, index);
     });
   }
 
@@ -38,12 +38,12 @@ function Main() {
     );
     if (res.data !== null) arr.push(res.data);
 
-    if (index === 99) {
+    if (arr.length === 100) {
       let wasChange = true;
       let counter = 0;
 
       // console.log(arr);
-
+      
       let newArr = Array.from(arr);
 
       // console.log(newArr);
