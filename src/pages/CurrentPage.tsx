@@ -26,7 +26,7 @@ const Page = (url?: any) => {
   let temp = window.location.href.split("/");
   let urlNumber = temp[temp.length - 1];
 
-  console.log(news.url);
+  // console.log(news.url);
 
   if (news.url === "") News(Number(urlNumber), setNavigateTo, setNews);
 
@@ -67,18 +67,18 @@ const Page = (url?: any) => {
   ) {
     // console.log(parentId);
     numberColor = numberColor;
-    console.log(props);
+    // console.log(props);
     // let arr = [];
-    console.log(element.currentTarget.classList.add("hidden"));
+    element.currentTarget.classList.add("hidden");
 
     for (const value of props) {
       let response = await axios.get(
         `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
       );
 
-      console.log(value);
+      // console.log(value);
 
-      console.log(response.data);
+      // console.log(response.data);
 
       if (response.data.deleted === true) {
         alert("Сообщение было удалено!");
@@ -137,14 +137,14 @@ const Page = (url?: any) => {
   }
 
   async function Comments(props: number[]) {
-    console.log(props);
+    // console.log(props);
     let arr = [];
     for (const value of props) {
       let response = await axios.get(
         `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
       );
 
-      console.log(response.data);
+      // console.log(response.data);
 
       let temp = (
         <div className="comment" key={response.data.id}>
@@ -168,7 +168,7 @@ const Page = (url?: any) => {
       arr.push(temp);
     }
 
-    console.log(arr);
+    // console.log(arr);
     setComments(Array.from(arr));
   }
 
@@ -232,7 +232,7 @@ async function News(props: number, setNavigateTo: any, setNews: any) {
       countComments: news.data.descendants,
       listComments: news.data.kids,
     });
-    console.log(news.data);
+    // console.log(news.data);
   }
 }
 

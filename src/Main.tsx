@@ -28,25 +28,31 @@ function Main() {
     let arr: INewsItem[] = [];
 
     await responseItems.data.map((value: number, index: number) => {
-      if (index < 100) CreateItems(value, arr);
+      if (index < 100) CreateItems(value, arr, index);
     });
   }
 
-  async function CreateItems(value: number, arr: INewsItem[]) {
+  async function CreateItems(value: number, arr: INewsItem[], index:number) {
     const res = await axios.get(
       `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
     );
-    arr.push(res.data);
+    if (res.data !== null) arr.push(res.data);
 
-    if (arr.length === 100) {
+    if (index === 99) {
       let wasChange = true;
       let counter = 0;
+
+      console.log(arr);
+
       let newArr = Array.from(arr);
+
+      console.log(newArr);
 
       while (wasChange) {
         counter = 0;
-        // console.log(newArr[0].time);
         for (let i = 0; i < newArr.length; i++) {
+          // console.log(newArr[i].time);
+
           if (
             newArr[i + 1] !== undefined &&
             newArr[i].time < newArr[i + 1].time
@@ -80,8 +86,8 @@ function Main() {
   // console.log(newsItems);
 
   const handleClickBtnUp = () => {
-    window.scroll(0,0);
-  }
+    window.scroll(0, 0);
+  };
 
   const handleClickBtn = () => {
     setNewsItems(undefined);
