@@ -21,7 +21,6 @@ const Page = (url?: any) => {
     "#193365",
   ]);
 
-  const [positionComment, setPosComment] = useState(0);
   const navigate = useNavigate();
   let temp = window.location.href.split("/");
   let urlNumber = temp[temp.length - 1];
@@ -84,20 +83,12 @@ const Page = (url?: any) => {
       const div = document.createElement("div");
       div.classList.add("comment");
       div.style.backgroundColor = colors[numberColor];
-      div.style.left = positionComment + "%";
       div.classList.add("comment-kid");
       const h2 = div.appendChild(document.createElement("h2"));
       h2.textContent = response.data.by;
       const p = div.appendChild(document.createElement("p"));
       p.textContent = response.data.text;
 
-      setPosComment((value) => {
-        if (value === 50) {
-          return 0;
-        } else {
-          return value + 5;
-        }
-      });
 
       if (numberColor < 3) numberColor++;
 
