@@ -42,11 +42,11 @@ function Main() {
       let wasChange = true;
       let counter = 0;
 
-      console.log(arr);
+      // console.log(arr);
 
       let newArr = Array.from(arr);
 
-      console.log(newArr);
+      // console.log(newArr);
 
       while (wasChange) {
         counter = 0;
