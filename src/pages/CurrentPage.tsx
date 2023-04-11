@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import moment from "moment";
 
 const Page = (url?: any) => {
-  const [navigateTo, setNavigateTo] = useState(false);
+  const [navigateTo, setNavigateTo] = useState<Boolean>(false);
   const [news, setNews] = useState({
     url: "",
     title: "",
@@ -25,7 +25,7 @@ const Page = (url?: any) => {
   let temp = window.location.href.split("/");
   let urlNumber = temp[temp.length - 1];
 
-  // console.log(news.url);
+  console.log('Конкретная страница');
 
   if (news.url === "") News(Number(urlNumber), setNavigateTo, setNews);
 
@@ -88,7 +88,6 @@ const Page = (url?: any) => {
       h2.textContent = response.data.by;
       const p = div.appendChild(document.createElement("p"));
       p.textContent = response.data.text;
-
 
       if (numberColor < 3) numberColor++;
 
@@ -174,9 +173,9 @@ const Page = (url?: any) => {
           <button onClick={handleClickUpdate} className="personal-page__btn">
             Обновить комментарии
           </button>
-          <button className="personal-page__btn">
-            <Link to="/">Вернуться на главную</Link>
-          </button>
+          <Link to="/">
+            <button className="personal-page__btn">Вернуться на главную</button>
+          </Link>
         </div>
         {news.url === "" ? (
           <div>
@@ -217,7 +216,7 @@ const Page = (url?: any) => {
   );
 };
 
-async function News(props: number, setNavigateTo: any, setNews: any) {
+async function News(props: number, setNavigateTo: React.Dispatch<React.SetStateAction<Boolean>>, setNews: any) {
   let news = await axios.get(
     `https://hacker-news.firebaseio.com/v0/item/${props}.json?print=pretty`
   );
