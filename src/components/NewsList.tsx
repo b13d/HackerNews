@@ -100,8 +100,6 @@ export default function NewsList() {
         UsersData();
     };
 
-    console.log(location)
-
     return (
         <>
             {numberNews.length < 1 || newsItems === undefined ? (
