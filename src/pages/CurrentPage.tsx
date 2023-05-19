@@ -67,7 +67,10 @@ const Page = (url?: any) => {
       h2.classList.add("comment__by");
       const p = div.appendChild(document.createElement("p"));
       p.classList.add("comment__text");
-      p.textContent = response.data.text;
+      p.textContent = new DOMParser().parseFromString(
+        response.data.text,
+        "text/html"
+      ).documentElement.textContent;
 
       const newDiv = div.appendChild(document.createElement("div"));
       newDiv.classList.add("comment-" + response.data.id);
@@ -109,7 +112,12 @@ const Page = (url?: any) => {
       let temp = (
         <div className="comment" key={response.data.id}>
           <h2 className="comment__by">{response.data.by}</h2>
-          <p className="comment__text">{response.data.text}</p>
+          <p className="comment__text">
+            {
+              new DOMParser().parseFromString(response.data.text, "text/html")
+                .documentElement.textContent
+            }
+          </p>
           {response.data.kids !== undefined ? (
             <button
               onClick={(e) =>
@@ -131,7 +139,6 @@ const Page = (url?: any) => {
       arr.push(temp);
     }
 
-    // console.log(arr);
     setComments(Array.from(arr));
   }
 
@@ -161,10 +168,13 @@ const Page = (url?: any) => {
         ) : (
           <div className="only-news">
             <p>
-              url:{" "}
-              <a target="_blank" href={news.url}>
-              <span className="only-news__text">{news.url}</span>
-              </a>
+              url:
+              {news.url && (
+                <a target="_blank" href={news.url}>
+                  <span className="only-news__text"> {news.url}</span>
+                </a>
+              )}
+              {!news.url && <span className="only-news__text"> Ссылка не найдена</span>}
             </p>
 
             <p>
@@ -172,12 +182,19 @@ const Page = (url?: any) => {
             </p>
             <p>
               date:
-              <span className="only-news__text">{moment
-                .utc(Number(news.date) * 1000)
-                .format("MMMM Do YYYY, h:mm:ss a")}</span>
+              <span className="only-news__text">
+                {moment
+                  .utc(Number(news.date) * 1000)
+                  .format("MMMM Do YYYY, h:mm:ss a")}
+              </span>
             </p>
-            <p>author: <span className="only-news__text">{news.author}</span></p>
-            <p>countComments: <span className="only-news__text">{news.countComments}</span></p>
+            <p>
+              author: <span className="only-news__text">{news.author}</span>
+            </p>
+            <p>
+              countComments:{" "}
+              <span className="only-news__text">{news.countComments}</span>
+            </p>
             {news.listComments !== undefined &&
             news.listComments.length > 0 &&
             comments.length === 0 ? (
