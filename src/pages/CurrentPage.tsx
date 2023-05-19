@@ -73,6 +73,7 @@ const Page = (url?: any) => {
             h2.textContent = response.data.by;
             h2.classList.add("comment__by");
             const p = div.appendChild(document.createElement("p"));
+            p.classList.add("comment__text");
             p.textContent = response.data.text;
 
 
@@ -120,7 +121,7 @@ const Page = (url?: any) => {
             let temp = (
                 <div className="comment" key={response.data.id}>
                     <h2 className="comment__by">{response.data.by}</h2>
-                    <p>{response.data.text}</p>
+                    <p className="comment__text">{response.data.text}</p>
                     {response.data.kids !== undefined ? (
                         <button
                             onClick={(e) =>
