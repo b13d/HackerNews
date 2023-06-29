@@ -58,6 +58,8 @@ export default async function Comments({
   // });
 
   // console.log(arrComments);
+  const jsdom = require("jsdom");
+  const { JSDOM } = jsdom;
 
   return (
     <div className="max-w-[1000px] m-auto py-4 min-h-[100vh] px-6 bg-[#f6f6ef]">
@@ -82,13 +84,10 @@ export default async function Comments({
               const resComments = await axios.get<IComment>(
                 `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
               );
-
-              console.log(resComments);
+              // console.log(resComments);
               // JSON.parse(resComments.data.text);
-              console.log(resComments.data.text);
+              // console.log(resComments.data.text);
               // arrComments.push(resComments.data);
-
-              console.log(resComments.data.text);
 
               return (
                 <div key={resComments.data.id}>
@@ -96,17 +95,23 @@ export default async function Comments({
                     {resComments.data.by}{" "}
                     {moment.unix(resComments.data.time).fromNow()}
                   </p>
-                  <h1>
+                  <h1 className="textInner">
                     {resComments.data.text === "[dead]" ? (
                       <span className="text-red-400">Comment deleted</span>
                     ) : (
-                      resComments.data.text
-                        .replace(new RegExp("&" + "#" + "x27;", "g"), "'")
-                        .replace(new RegExp("&#x2F;", "g"), "/")
-                        .replace(new RegExp("<p>", "g"), "")
-                        .replace(new RegExp("</p>", "g"), "")
-                        .replace(new RegExp("<a>", "g"), "")
-                        .replace(new RegExp("</a>", "g"), "")
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: resComments.data.text,
+                        }}
+                      ></div>
+
+                      // resComments.data.text
+                      // .replace(new RegExp("&" + "#" + "x27;", "g"), "'")
+                      // .replace(new RegExp("&#x2F;", "g"), "/")
+                      // .replace(new RegExp("<p>", "g"), "")
+                      // .replace(new RegExp("</p>", "g"), "")
+                      // .replace(new RegExp("<a>", "g"), "")
+                      // .replace(new RegExp("</a>", "g"), "")
                     )}
                   </h1>
                 </div>
