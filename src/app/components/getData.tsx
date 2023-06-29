@@ -39,7 +39,7 @@ export default async function getData() {
       `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
     );
  
-    console.log(tempAxios.data.kids);
+    // console.log(tempAxios.data.kids);
     return (
       <div
         className="px-10 py-4 gap-5 flex flex-col rounded-tl-3xl rounded-br-3xl rounded-md bg-white"
