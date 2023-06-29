@@ -38,7 +38,7 @@ export default async function getData() {
     let tempAxios = await axios.get<IItems>(
       `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
     );
-
+ 
     console.log(tempAxios.data.kids);
     return (
       <div
