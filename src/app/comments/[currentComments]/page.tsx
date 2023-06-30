@@ -35,16 +35,33 @@ export default async function Comments({
 }: {
   params: { currentComments: number };
 }) {
-  const [currentURL, setCurrentURL] = useState("");
+  // const [currentURL, setCurrentURL] = useState("");
   const res = await axios.get<IItems>(
     `https://hacker-news.firebaseio.com/v0/item/${params.currentComments}.json?print=pretty`
   );
 
-
-  const handleClickKids = (currentID: number) => {
-    let q = document.querySelectorAll(`hidden-${currentID} hidden`);
+  const handleClickKids = (
+    element: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    kids: number[],
+    currentID: number
+  ) => {
+    let q = document.querySelectorAll(`.hidden-${currentID}`);
 
     console.log(currentID);
+
+    if (q[0].classList.contains("hidden")) {
+      element.currentTarget.innerHTML = "[hide]";
+
+      q.forEach((value) => {
+        value.classList.remove("hidden");
+      });
+    } else {
+      element.currentTarget.innerHTML = "[" + kids.length + " more]";
+
+      q.forEach((value) => {
+        value.classList.add("hidden");
+      });
+    }
 
     console.log(q);
   };
@@ -82,13 +99,18 @@ export default async function Comments({
                   {resComments.data.by}{" "}
                   {moment.unix(resComments.data.time).fromNow()}
                   <span
-                    onClick={() => handleClickKids(resComments.data.id)}
+                    onClick={(e) =>
+                      handleClickKids(
+                        e,
+                        resComments.data.kids,
+                        resComments.data.id
+                      )
+                    }
                     className="hover:underline cursor-pointer ml-1"
                   >
                     {resComments.data.kids !== undefined
-                      ? resComments.data.kids.length
-                      : 0}{" "}
-                    more
+                      ? "[" + resComments.data.kids.length + " more]"
+                      : ""}
                   </span>
                 </p>
 
@@ -120,15 +142,35 @@ export default async function Comments({
 
                         return (
                           <div
-                            className={`hidden-${resComments.data.id} hidden`}
+                            className={`hidden-${resComments.data.id} hidden ml-10 mt-2`}
                             key={innerResComments.data.id}
                           >
-                            <p>
+                            <p className="text-[gray]">
                               {innerResComments.data.by}{" "}
                               {moment
                                 .unix(innerResComments.data.time)
                                 .fromNow()}
                             </p>
+                            <>
+                              {innerResComments.data.text === "[dead]" ||
+                              innerResComments.data.text === "undefined" ||
+                              innerResComments.data.deleted === true ? (
+                                <span className="text-red-400">
+                                  Comment deleted
+                                </span>
+                              ) : (
+                                <>
+                                  <div
+                                    id={innerResComments.data.id.toString()}
+                                    dangerouslySetInnerHTML={{
+                                      __html: `<div  className=${`leading-5`}>${
+                                        innerResComments.data.text
+                                      }</div>`,
+                                    }}
+                                  ></div>
+                                </>
+                              )}
+                            </>
                           </div>
                         );
                       })}

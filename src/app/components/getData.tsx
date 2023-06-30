@@ -84,25 +84,18 @@ export default async function getData() {
             </h1>
             {/* <h1>id: {tempAxios.data.id}</h1> */}
           </div>
-          <div>
-            <Link
-              className="flex gap-1"
-              href={`../comments/${tempAxios.data.id}`}
-            >
-              <img
-                className="w-[25px]"
-                src="/images/chat.png"
-                alt="chat-icon"
-              />
-              {tempAxios.data.descendants !== undefined ? (
-                <h2 className="text-[gray] max-sm:text-[14px]">
-                  {tempAxios.data.descendants} comments
-                </h2>
-              ) : (
-                <h2 className="text-[gray] max-sm:text-[14px]">0 comments</h2>
-              )}
-            </Link>
-          </div>
+          {/* <div> */}
+          <Link className="flex gap-1" href={`/comments/${tempAxios.data.id}`}>
+            <img className="w-[25px]" src="/images/chat.png" alt="chat-icon" />
+            {tempAxios.data.descendants !== undefined ? (
+              <h2 className="text-[gray] max-sm:text-[14px]">
+                {tempAxios.data.descendants} comments
+              </h2>
+            ) : (
+              <h2 className="text-[gray] max-sm:text-[14px]">0 comments</h2>
+            )}
+          </Link>
+          {/* </div> */}
         </div>
       </div>
     );

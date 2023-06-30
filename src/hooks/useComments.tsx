@@ -2,6 +2,18 @@ import React from "react";
 import axios from "axios";
 import moment from "moment";
 
+interface IItems {
+  by: string;
+  descendants: number;
+  id: number;
+  kids: number[];
+  score: number;
+  time: number;
+  title: string;
+  type: string;
+  url: string;
+}
+
 interface IComment {
   by: string;
   id: number;
@@ -13,83 +25,14 @@ interface IComment {
   deleted?: boolean;
 }
 
-export default function UseComments(
-  currentCommentID: number,
-  commentsID: number[]
-) {
-  console.log(currentCommentID);
-  console.log(commentsID);
+export default async function UseComments(currentCommentID: number) {
+  const res = await axios.get<IItems>(
+    `https://hacker-news.firebaseio.com/v0/item/${currentCommentID}.json?print=pretty`
+  );
 
-  let tempArr: IComment[] = [];
+  let arrComment: IItems | undefined = undefined;
 
-  let q = document.getElementById(currentCommentID.toString());
+  arrComment = res.data;
 
-  let div = document.createElement("div");
-  let span = document.createElement("span");
-
-  // span.onclick = onClick={() =>
-  //   UseComments(resComments.data.id, resComments.data.kids)
-  // }
-
-  let qq = commentsID.map(async (value) => {
-    const resComments = await axios.get<IComment>(
-      `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
-    );
-
-    return (div.innerHTML = `<p class="text-[gray]">${
-      resComments.data.by
-    } ${moment.unix(resComments.data.time).fromNow()} <span>${
-      resComments.data.kids !== undefined &&
-      resComments.data.kids.length > 0 ? (
-        <span
-          onClick={() =>
-            UseComments(resComments.data.id, resComments.data.kids)
-          }
-        >
-          click
-        </span>
-      ) : (
-        // <span
-        // onClick={() =>
-        //   UseComments(resComments.data.id, resComments.data.kids)
-        // }
-        //   className="hover:underline cursor-pointer ml-1"
-        // >
-        //   {resComments.data.kids.length} more
-        // </span>
-        ""
-      )
-    }</span></p>`);
-  });
-
-  q?.appendChild(div);
-
-  // console.log(qq)
-
-  // if (q !== undefined) {
-  //   q?.appendChild(qq.map);
-  // }
-  // console.log(q);
-  // return commentsID.map(async (value) => {
-  //   const res = await axios.get<IComment>(
-  //     `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
-  //   );
-
-  //   tempArr.push(res.data);
-
-  //   return <div key={res.data.id}>{res.data.text}</div>;
-  // });
-
-  // return commentsID.map((value, index) => {
-  //   const res = axios.get<IComment>(
-  //     `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
-  //   );
-
-  //   // tempArr.push(res.data);
-
-  //   return <div key={index}>hello</div>;
-  //   // return <div key={res.data.id}>{res.data.text}</div>;
-  // });
-
-  return <h1>hello</h1>;
+  return arrComment;
 }
