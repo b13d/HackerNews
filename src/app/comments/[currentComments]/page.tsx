@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
 import Header from "@/app/components/Header";
@@ -35,14 +35,19 @@ export default async function Comments({
 }: {
   params: { currentComments: number };
 }) {
-  // console.log(params.currentComments);
-  //
-
-  let arrComments: IComment[] = [];
-
+  const [currentURL, setCurrentURL] = useState("");
   const res = await axios.get<IItems>(
     `https://hacker-news.firebaseio.com/v0/item/${params.currentComments}.json?print=pretty`
   );
+
+
+  const handleClickKids = (currentID: number) => {
+    let q = document.querySelectorAll(`hidden-${currentID} hidden`);
+
+    console.log(currentID);
+
+    console.log(q);
+  };
 
   return (
     <div className="max-w-[1000px] m-auto py-4 min-h-[100vh] px-6 bg-[#f6f6ef]">
@@ -76,18 +81,17 @@ export default async function Comments({
                 <p className="text-[gray]">
                   {resComments.data.by}{" "}
                   {moment.unix(resComments.data.time).fromNow()}
-                  {resComments.data.kids !== undefined &&
-                  resComments.data.kids.length > 0 ? (
-                    <span
-                      onClick={() => UseComments(resComments.data.kids)}
-                      className="hover:underline cursor-pointer ml-1"
-                    >
-                      [{resComments.data.kids.length} more]
-                    </span>
-                  ) : (
-                    ""
-                  )}
+                  <span
+                    onClick={() => handleClickKids(resComments.data.id)}
+                    className="hover:underline cursor-pointer ml-1"
+                  >
+                    {resComments.data.kids !== undefined
+                      ? resComments.data.kids.length
+                      : 0}{" "}
+                    more
+                  </span>
                 </p>
+
                 <>
                   {resComments.data.text === "[dead]" ||
                   resComments.data.text === "undefined" ||
@@ -96,8 +100,9 @@ export default async function Comments({
                   ) : (
                     <>
                       <div
+                        id={resComments.data.id.toString()}
                         dangerouslySetInnerHTML={{
-                          __html: `<div className=${`${resComments.data.id} leading-5`}>${
+                          __html: `<div  className=${`leading-5`}>${
                             resComments.data.text
                           }</div>`,
                         }}
@@ -105,6 +110,30 @@ export default async function Comments({
                     </>
                   )}
                 </>
+                {resComments.data.kids !== undefined &&
+                  resComments.data.kids.length > 0 && (
+                    <>
+                      {resComments.data.kids.map(async (value) => {
+                        const innerResComments = await axios.get<IComment>(
+                          `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
+                        );
+
+                        return (
+                          <div
+                            className={`hidden-${resComments.data.id} hidden`}
+                            key={innerResComments.data.id}
+                          >
+                            <p>
+                              {innerResComments.data.by}{" "}
+                              {moment
+                                .unix(innerResComments.data.time)
+                                .fromNow()}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </>
+                  )}
               </div>
             );
           })
