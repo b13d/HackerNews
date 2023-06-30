@@ -1,11 +1,11 @@
+"use client";
+
 import React from "react";
 import axios from "axios";
 import moment from "moment";
 import Header from "@/app/components/Header";
-
-interface IProps {
-  commentsID: number[];
-}
+import Link from "next/link";
+import UseComments from "@/hooks/useComments";
 
 interface IItems {
   by: string;
@@ -27,13 +27,8 @@ interface IComment {
   text: string;
   time: number;
   type: string;
+  deleted?: boolean;
 }
-
-// export default function Comments(commentsID: IProps) {
-//   console.log(commentsID);
-
-//   return;
-// }
 
 export default async function Comments({
   params,
@@ -49,78 +44,78 @@ export default async function Comments({
     `https://hacker-news.firebaseio.com/v0/item/${params.currentComments}.json?print=pretty`
   );
 
-  // res.data.kids.map(async (value) => {
-  //   const resComments = await axios.get<IComment>(
-  //     `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
-  //   );
-
-  //   arrComments.push(resComments.data);
-  // });
-
-  // console.log(arrComments);
-  const jsdom = require("jsdom");
-  const { JSDOM } = jsdom;
-
   return (
     <div className="max-w-[1000px] m-auto py-4 min-h-[100vh] px-6 bg-[#f6f6ef]">
       <Header />
 
-      <div className="flex flex-col">
-        <h1 className="text-[18px]">{res.data.title}</h1>
+      <div className="flex flex-col gap-5">
+        <div className="mt-10 mb-5">
+          <h1 className="text-[18px]">{res.data.title}</h1>
 
-        <span className="flex gap-3 mb-4 text-[#777777]">
-          Posted by{" "}
-          <span className="font-sans">
-            <span className="mr-2">{res.data.by}</span> |
-            <span className="mx-2 font-mono">
-              {moment.unix(res.data.time).fromNow()} |
+          <span className="flex gap-3 mb-4 text-[#777777]">
+            Posted by{" "}
+            <span className="font-sans">
+              <span className="mr-2">{res.data.by}</span> |
+              <span className="mx-2 font-mono">
+                {moment.unix(res.data.time).fromNow()} |
+              </span>
+              {res.data.descendants !== undefined ? res.data.descendants : 0}{" "}
+              comments
             </span>
-            {res.data.kids !== undefined ? res.data.kids.length : 0} comments
           </span>
-        </span>
-        <section className="flex flex-col gap-3">
-          {res.data.kids !== undefined ? (
-            res.data.kids.map(async (value) => {
-              const resComments = await axios.get<IComment>(
-                `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
-              );
-              // console.log(resComments);
-              // JSON.parse(resComments.data.text);
-              // console.log(resComments.data.text);
-              // arrComments.push(resComments.data);
+        </div>
 
-              return (
-                <div key={resComments.data.id}>
-                  <p className="text-[gray]">
-                    {resComments.data.by}{" "}
-                    {moment.unix(resComments.data.time).fromNow()}
-                  </p>
-                  <h1 className="textInner">
-                    {resComments.data.text === "[dead]" ? (
-                      <span className="text-red-400">Comment deleted</span>
-                    ) : (
+        {res.data.kids !== undefined ? (
+          res.data.kids.map(async (value) => {
+            const resComments = await axios.get<IComment>(
+              `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
+            );
+
+            return (
+              <div key={resComments.data.id}>
+                <p className="text-[gray]">
+                  {resComments.data.by}{" "}
+                  {moment.unix(resComments.data.time).fromNow()}
+                  {resComments.data.kids !== undefined &&
+                  resComments.data.kids.length > 0 ? (
+                    <span
+                      onClick={() => UseComments(resComments.data.kids)}
+                      className="hover:underline cursor-pointer ml-1"
+                    >
+                      [{resComments.data.kids.length} more]
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </p>
+                <>
+                  {resComments.data.text === "[dead]" ||
+                  resComments.data.text === "undefined" ||
+                  resComments.data.deleted === true ? (
+                    <span className="text-red-400">Comment deleted</span>
+                  ) : (
+                    <>
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: resComments.data.text,
+                          __html: `<div className=${`${resComments.data.id} leading-5`}>${
+                            resComments.data.text
+                          }</div>`,
                         }}
                       ></div>
-
-                      // resComments.data.text
-                      // .replace(new RegExp("&" + "#" + "x27;", "g"), "'")
-                      // .replace(new RegExp("&#x2F;", "g"), "/")
-                      // .replace(new RegExp("<p>", "g"), "")
-                      // .replace(new RegExp("</p>", "g"), "")
-                      // .replace(new RegExp("<a>", "g"), "")
-                      // .replace(new RegExp("</a>", "g"), "")
-                    )}
-                  </h1>
-                </div>
-              );
-            })
-          ) : (
-            <span className="m-auto">There are no comments</span>
-          )}
-        </section>
+                    </>
+                  )}
+                </>
+              </div>
+            );
+          })
+        ) : (
+          <span className="m-auto">
+            There are no comments{" "}
+            <Link className=" underline" href="/">
+              back
+            </Link>
+          </span>
+        )}
       </div>
     </div>
   );

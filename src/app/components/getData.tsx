@@ -94,9 +94,9 @@ export default async function getData() {
                 src="/images/chat.png"
                 alt="chat-icon"
               />
-              {tempAxios.data.kids !== undefined ? (
+              {tempAxios.data.descendants !== undefined ? (
                 <h2 className="text-[gray] max-sm:text-[14px]">
-                  {tempAxios.data.kids.length} comments
+                  {tempAxios.data.descendants} comments
                 </h2>
               ) : (
                 <h2 className="text-[gray] max-sm:text-[14px]">0 comments</h2>
