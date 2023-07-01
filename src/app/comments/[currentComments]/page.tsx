@@ -67,7 +67,7 @@ export default async function Comments({
     if (element.classList.contains("hide")) {
       element.classList.remove("hide");
       element.classList.add("show");
-      element.innerHTML = "[hide]"
+      element.innerHTML = "[hide]";
 
       kids.map(async (value) => {
         const res = await axios.get<IComment>(
@@ -75,10 +75,10 @@ export default async function Comments({
         );
 
         let div = document.createElement("div");
-        div.classList.add(`children-${res.data.id}`);
+        div.className = `children-${res.data.id} ml-5 my-2`;
         let p = document.createElement("p");
         p.classList.add("text-[gray]");
-        p.innerText = res.data.by + moment.unix(res.data.time).fromNow();
+        p.innerText = res.data.by + " " + moment.unix(res.data.time).fromNow();
         let span = document.createElement("span");
         span.className = "hover:underline cursor-pointer ml-1 hide";
         span.innerHTML =
@@ -109,11 +109,11 @@ export default async function Comments({
   };
 
   return (
-    <div className="max-w-[1000px] m-auto py-4 min-h-[100vh] px-6 bg-[#f6f6ef]">
+    <div className="max-w-[1000px] m-auto py-4 min-h-[100vh] px-6 bg-[#f6f6ef] drop-shadow-2xl">
       <Header />
 
       <div className="flex flex-col gap-5">
-        <div className="mt-10 mb-5">
+        <div className="mt-10">
           <h1 className="text-[18px]">{res.data.title}</h1>
 
           <span className="flex gap-3 mb-4 text-[#777777]">
