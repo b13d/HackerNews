@@ -6,6 +6,7 @@ import moment from "moment";
 import Header from "@/app/components/Header";
 import Link from "next/link";
 import UseComments from "@/hooks/useComments";
+import { Comment } from "@/app/components/Comment";
 
 interface IItems {
   by: string;
@@ -40,30 +41,71 @@ export default async function Comments({
     `https://hacker-news.firebaseio.com/v0/item/${params.currentComments}.json?print=pretty`
   );
 
+  const handleTest = () => {
+    console.log("test!!!");
+  };
+
   const handleClickKids = (
-    element: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    element: HTMLSpanElement,
     kids: number[],
     currentID: number
   ) => {
-    let q = document.querySelectorAll(`.hidden-${currentID}`);
+    // let tempClass = document.querySelectorAll(`.hidden-${currentID}`);
 
+    console.log(element);
     console.log(currentID);
 
-    if (q[0].classList.contains("hidden")) {
-      element.currentTarget.innerHTML = "[hide]";
+    let arrTemp: HTMLElement[] = [];
 
-      q.forEach((value) => {
-        value.classList.remove("hidden");
+    // debugger;
+    let childrenElement = element.parentElement?.parentElement?.querySelector(
+      ".children"
+    ) as HTMLElement;
+
+    console.log(childrenElement);
+
+    if (element.classList.contains("hide")) {
+      element.classList.remove("hide");
+      element.classList.add("show");
+      element.innerHTML = "[hide]"
+
+      kids.map(async (value) => {
+        const res = await axios.get<IComment>(
+          `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
+        );
+
+        let div = document.createElement("div");
+        div.classList.add(`children-${res.data.id}`);
+        let p = document.createElement("p");
+        p.classList.add("text-[gray]");
+        p.innerText = res.data.by + moment.unix(res.data.time).fromNow();
+        let span = document.createElement("span");
+        span.className = "hover:underline cursor-pointer ml-1 hide";
+        span.innerHTML =
+          res.data.kids !== undefined && res.data.kids.length > 0
+            ? `[${res.data.kids.length} more]`
+            : "";
+        span.onclick = (e) => handleClickKids(span, res.data.kids, res.data.id);
+        p.appendChild(span);
+        let divInner = document.createElement("div");
+        divInner.classList.add("leading-5");
+        divInner.innerHTML = res.data.text;
+        div.appendChild(p);
+        div.appendChild(divInner);
+        let divChildren = document.createElement("div");
+        divChildren.classList.add("children");
+        div.appendChild(divChildren);
+        childrenElement.appendChild(div);
       });
     } else {
-      element.currentTarget.innerHTML = "[" + kids.length + " more]";
+      element.classList.add("hide");
+      element.classList.remove("show");
 
-      q.forEach((value) => {
-        value.classList.add("hidden");
-      });
+      element.innerHTML = `${kids.length} more`;
+      childrenElement.innerHTML = "";
     }
 
-    console.log(q);
+    console.log(arrTemp);
   };
 
   return (
@@ -94,19 +136,19 @@ export default async function Comments({
             );
 
             return (
-              <div key={resComments.data.id}>
+              <div id={`${resComments.data.id}`} key={resComments.data.id}>
                 <p className="text-[gray]">
                   {resComments.data.by}{" "}
                   {moment.unix(resComments.data.time).fromNow()}
                   <span
                     onClick={(e) =>
                       handleClickKids(
-                        e,
+                        e.currentTarget,
                         resComments.data.kids,
                         resComments.data.id
                       )
                     }
-                    className="hover:underline cursor-pointer ml-1"
+                    className="hover:underline cursor-pointer ml-1 hide"
                   >
                     {resComments.data.kids !== undefined
                       ? "[" + resComments.data.kids.length + " more]"
@@ -122,7 +164,6 @@ export default async function Comments({
                   ) : (
                     <>
                       <div
-                        id={resComments.data.id.toString()}
                         dangerouslySetInnerHTML={{
                           __html: `<div  className=${`leading-5`}>${
                             resComments.data.text
@@ -132,50 +173,7 @@ export default async function Comments({
                     </>
                   )}
                 </>
-                {resComments.data.kids !== undefined &&
-                  resComments.data.kids.length > 0 && (
-                    <>
-                      {resComments.data.kids.map(async (value) => {
-                        const innerResComments = await axios.get<IComment>(
-                          `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
-                        );
-
-                        return (
-                          <div
-                            className={`hidden-${resComments.data.id} hidden ml-10 mt-2`}
-                            key={innerResComments.data.id}
-                          >
-                            <p className="text-[gray]">
-                              {innerResComments.data.by}{" "}
-                              {moment
-                                .unix(innerResComments.data.time)
-                                .fromNow()}
-                            </p>
-                            <>
-                              {innerResComments.data.text === "[dead]" ||
-                              innerResComments.data.text === "undefined" ||
-                              innerResComments.data.deleted === true ? (
-                                <span className="text-red-400">
-                                  Comment deleted
-                                </span>
-                              ) : (
-                                <>
-                                  <div
-                                    id={innerResComments.data.id.toString()}
-                                    dangerouslySetInnerHTML={{
-                                      __html: `<div  className=${`leading-5`}>${
-                                        innerResComments.data.text
-                                      }</div>`,
-                                    }}
-                                  ></div>
-                                </>
-                              )}
-                            </>
-                          </div>
-                        );
-                      })}
-                    </>
-                  )}
+                <div className="children"></div>
               </div>
             );
           })

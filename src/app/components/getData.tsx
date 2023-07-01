@@ -27,8 +27,6 @@ export default async function getData() {
 
   let resArr: string[] = arr.sort().slice(400, 500).reverse();
 
-  let itemsArr: IItems[] = [];
-
   return resArr.map(async (value, index) => {
     let tempAxios = await axios.get<IItems>(
       `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
@@ -82,10 +80,8 @@ export default async function getData() {
                 )}
               </Link>
             </h1>
-            {/* <h1>id: {tempAxios.data.id}</h1> */}
           </div>
-          {/* <div> */}
-          <Link className="flex gap-1" href={`/comments/${tempAxios.data.id}`}>
+          <Link className="flex gap-1"  href={`/comments/${tempAxios.data.id}`}>
             <img className="w-[25px]" src="/images/chat.png" alt="chat-icon" />
             {tempAxios.data.descendants !== undefined ? (
               <h2 className="text-[gray] max-sm:text-[14px]">
@@ -95,7 +91,6 @@ export default async function getData() {
               <h2 className="text-[gray] max-sm:text-[14px]">0 comments</h2>
             )}
           </Link>
-          {/* </div> */}
         </div>
       </div>
     );
