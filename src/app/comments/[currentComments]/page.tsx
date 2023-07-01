@@ -77,7 +77,7 @@ export default async function Comments({
         let div = document.createElement("div");
         div.className = `children-${res.data.id} ml-5 my-2`;
         let p = document.createElement("p");
-        p.classList.add("text-[gray]");
+        p.className = "text-[gray] max-sm:text-[14px]";
         p.innerText = res.data.by + " " + moment.unix(res.data.time).fromNow();
         let span = document.createElement("span");
         span.className = "hover:underline cursor-pointer ml-1 hide";
@@ -88,7 +88,7 @@ export default async function Comments({
         span.onclick = (e) => handleClickKids(span, res.data.kids, res.data.id);
         p.appendChild(span);
         let divInner = document.createElement("div");
-        divInner.classList.add("leading-5");
+        divInner.className = "leading-5 max-sm:text-[13px]";
         divInner.innerHTML = res.data.text;
         div.appendChild(p);
         div.appendChild(divInner);
@@ -109,10 +109,10 @@ export default async function Comments({
   };
 
   return (
-    <div className="max-w-[1000px] m-auto py-4 min-h-[100vh] px-6 bg-[#f6f6ef] drop-shadow-2xl overflow-hidden">
+    <div className="max-w-[1000px] m-auto py-4 min-h-[100vh] px-2 sm:px-6 bg-[#f6f6ef] drop-shadow-2xl overflow-hidden">
       <Header />
 
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-2">
         <div className="mt-10">
           <h1 className="text-[18px]">{res.data.title}</h1>
 
@@ -137,7 +137,7 @@ export default async function Comments({
 
             return (
               <div id={`${resComments.data.id}`} key={resComments.data.id}>
-                <p className="text-[gray]">
+                <p className="text-[gray] max-sm:text-[14px]">
                   {resComments.data.by}{" "}
                   {moment.unix(resComments.data.time).fromNow()}
                   <span
@@ -165,9 +165,7 @@ export default async function Comments({
                     <>
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: `<div  className=${`leading-5`}>${
-                            resComments.data.text
-                          }</div>`,
+                          __html: `<div class="leading-5 max-sm:text-[13px]">${resComments.data.text}</div>`,
                         }}
                       ></div>
                     </>
