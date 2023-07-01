@@ -109,7 +109,7 @@ export default async function Comments({
   };
 
   return (
-    <div className="max-w-[1000px] m-auto py-4 min-h-[100vh] px-6 bg-[#f6f6ef] drop-shadow-2xl">
+    <div className="max-w-[1000px] m-auto py-4 min-h-[100vh] px-6 bg-[#f6f6ef] drop-shadow-2xl overflow-hidden">
       <Header />
 
       <div className="flex flex-col gap-5">
