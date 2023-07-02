@@ -25,7 +25,7 @@ export default function Header() {
   });
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center my-5">
       <motion.div
         onClick={() => handleClick()}
         className={`max-sm:hidden ${styleOpacity} hover:bg-white hover:border-[black] hover:text-[black] border-2 duration-300 ease-in-out cursor-pointer w-[50px] h-[50px] flex items-center justify-center fixed top-[50%] left-4 bg-black text-white`}

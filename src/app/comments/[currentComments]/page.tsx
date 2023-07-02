@@ -109,81 +109,83 @@ export default async function Comments({
   };
 
   return (
-    <div className="max-w-[1000px] m-auto py-4 min-h-[100vh] px-2 sm:px-6 bg-[#f6f6ef] drop-shadow-2xl overflow-hidden">
+    <>
       <Header />
 
-      <div className="flex flex-col gap-2">
-        <div className="mt-10">
-          <h1 className="text-[18px]">{res.data.title}</h1>
+      <div className="max-w-[1000px] m-auto py-4 min-h-[100vh] px-2 sm:px-6 bg-[#f6f6ef] drop-shadow-2xl overflow-hidden">
+        <div className="flex flex-col gap-2">
+          <div className="mt-10">
+            <h1 className="text-[18px]">{res.data.title}</h1>
 
-          <span className="flex gap-3 mb-4 text-[#777777]">
-            Posted by{" "}
-            <span className="font-sans">
-              <span className="mr-2">{res.data.by}</span> |
-              <span className="mx-2 font-mono">
-                {moment.unix(res.data.time).fromNow()} |
+            <span className="flex gap-3 mb-4 text-[#777777]">
+              Posted by{" "}
+              <span className="font-sans">
+                <span className="mr-2">{res.data.by}</span> |
+                <span className="mx-2 font-mono">
+                  {moment.unix(res.data.time).fromNow()} |
+                </span>
+                {res.data.descendants !== undefined ? res.data.descendants : 0}{" "}
+                comments
               </span>
-              {res.data.descendants !== undefined ? res.data.descendants : 0}{" "}
-              comments
             </span>
-          </span>
+          </div>
+
+          {res.data.kids !== undefined ? (
+            res.data.kids.map(async (value) => {
+              const resComments = await axios.get<IComment>(
+                `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
+              );
+
+              return (
+                <div id={`${resComments.data.id}`} key={resComments.data.id}>
+                  <p className="text-[gray] max-sm:text-[14px]">
+                    {resComments.data.by}{" "}
+                    {moment.unix(resComments.data.time).fromNow()}
+                    <span
+                      onClick={(e) =>
+                        handleClickKids(
+                          e.currentTarget,
+                          resComments.data.kids,
+                          resComments.data.id
+                        )
+                      }
+                      className="hover:underline cursor-pointer ml-1 hide"
+                    >
+                      {resComments.data.kids !== undefined
+                        ? "[" + resComments.data.kids.length + " more]"
+                        : ""}
+                    </span>
+                  </p>
+
+                  <>
+                    {resComments.data.text === "[dead]" ||
+                    resComments.data.text === "undefined" ||
+                    resComments.data.deleted === true ? (
+                      <span className="text-red-400">Comment deleted</span>
+                    ) : (
+                      <>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: `<div class="leading-5 max-sm:text-[13px]">${resComments.data.text}</div>`,
+                          }}
+                        ></div>
+                      </>
+                    )}
+                  </>
+                  <div className="children"></div>
+                </div>
+              );
+            })
+          ) : (
+            <span className="m-auto">
+              There are no comments{" "}
+              <Link className=" underline" href="/">
+                back
+              </Link>
+            </span>
+          )}
         </div>
-
-        {res.data.kids !== undefined ? (
-          res.data.kids.map(async (value) => {
-            const resComments = await axios.get<IComment>(
-              `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
-            );
-
-            return (
-              <div id={`${resComments.data.id}`} key={resComments.data.id}>
-                <p className="text-[gray] max-sm:text-[14px]">
-                  {resComments.data.by}{" "}
-                  {moment.unix(resComments.data.time).fromNow()}
-                  <span
-                    onClick={(e) =>
-                      handleClickKids(
-                        e.currentTarget,
-                        resComments.data.kids,
-                        resComments.data.id
-                      )
-                    }
-                    className="hover:underline cursor-pointer ml-1 hide"
-                  >
-                    {resComments.data.kids !== undefined
-                      ? "[" + resComments.data.kids.length + " more]"
-                      : ""}
-                  </span>
-                </p>
-
-                <>
-                  {resComments.data.text === "[dead]" ||
-                  resComments.data.text === "undefined" ||
-                  resComments.data.deleted === true ? (
-                    <span className="text-red-400">Comment deleted</span>
-                  ) : (
-                    <>
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: `<div class="leading-5 max-sm:text-[13px]">${resComments.data.text}</div>`,
-                        }}
-                      ></div>
-                    </>
-                  )}
-                </>
-                <div className="children"></div>
-              </div>
-            );
-          })
-        ) : (
-          <span className="m-auto">
-            There are no comments{" "}
-            <Link className=" underline" href="/">
-              back
-            </Link>
-          </span>
-        )}
       </div>
-    </div>
+    </>
   );
 }
