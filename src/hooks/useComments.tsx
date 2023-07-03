@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import moment from "moment";
 
 interface IItems {
@@ -26,13 +25,19 @@ interface IComment {
 }
 
 export default async function UseComments(currentCommentID: number) {
-  const res = await axios.get<IItems>(
+  const res = await fetch(
     `https://hacker-news.firebaseio.com/v0/item/${currentCommentID}.json?print=pretty`
-  );
+  )
+    .then((response) => {
+      return response.json();
+    })
+    .then((data: IItems) => {
+      return data;
+    });
 
   let arrComment: IItems | undefined = undefined;
 
-  arrComment = res.data;
+  arrComment = res;
 
   return arrComment;
 }
