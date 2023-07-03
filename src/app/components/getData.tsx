@@ -15,8 +15,7 @@ interface IItems {
 
 export default async function getData() {
   const res = await fetch(
-    "https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty",
-    { next: { revalidate: 10 } }
+    "https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty"
   )
     .then((response) => {
       return response.json();
