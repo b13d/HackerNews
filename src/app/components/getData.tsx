@@ -35,7 +35,8 @@ export default async function getData() {
 
   return resArr.map(async (value, index) => {
     let tempAxios = await fetch(
-      `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
+      `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`,
+      { cache: "no-store" }
     )
       .then((response) => {
         return response.json();
