@@ -41,9 +41,6 @@ export default async function Comments({
     `https://hacker-news.firebaseio.com/v0/item/${params.currentComments}.json?print=pretty`
   );
 
-  const handleTest = () => {
-    console.log("test!!!");
-  };
 
   const handleClickKids = (
     element: HTMLSpanElement,
@@ -52,8 +49,8 @@ export default async function Comments({
   ) => {
     // let tempClass = document.querySelectorAll(`.hidden-${currentID}`);
 
-    console.log(element);
-    console.log(currentID);
+    // console.log(element);
+    // console.log(currentID);
 
     let arrTemp: HTMLElement[] = [];
 
@@ -62,7 +59,7 @@ export default async function Comments({
       ".children"
     ) as HTMLElement;
 
-    console.log(childrenElement);
+    // console.log(childrenElement);
 
     if (element.classList.contains("hide")) {
       element.classList.remove("hide");
@@ -105,7 +102,7 @@ export default async function Comments({
       childrenElement.innerHTML = "";
     }
 
-    console.log(arrTemp);
+    // console.log(arrTemp);
   };
 
   return (

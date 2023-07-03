@@ -20,8 +20,7 @@ export default function Header() {
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest > 0) setStyleOpacity("opacity-100");
     else setStyleOpacity("opacity-0");
-    console.log("scrollY change to", latest);
-    console.log();
+    // console.log("scrollY change to", latest);
   });
 
   return (

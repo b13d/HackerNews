@@ -1,4 +1,3 @@
-import axios from "axios";
 import Link from "next/link";
 import moment from "moment";
 
@@ -15,33 +14,45 @@ interface IItems {
 }
 
 export default async function getData() {
-  const res = await axios.get(
+  const res = await fetch(
     "https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty"
-  );
+  )
+    .then((response) => {
+      return response.json();
+    })
+    .then((data: number[]) => {
+      return data;
+    });
 
   let arr: string[] = [];
 
-  res.data.map((value: string) => {
-    arr.push(value);
+  res.map((value: number) => {
+    arr.push(value.toString());
   });
 
   let resArr: string[] = arr.sort().slice(400, 500).reverse();
 
   return resArr.map(async (value, index) => {
-    let tempAxios = await axios.get<IItems>(
+    let tempAxios = await fetch(
       `https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty`
-    );
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data: IItems) => {
+        return data;
+      });
 
     return (
       <div
         className="overflow-hidden max-[500px]:w-full max-[500px]:justify-start sm:px-5 sm:py-4 sm:gap-5 px-1 py-3 gap-2 min-h-[120px] flex items-center justify-center rounded-tl-3xl rounded-br-3xl rounded-md bg-white"
-        key={tempAxios.data.id}
+        key={tempAxios.id}
       >
         <div className="flex flex-col items-center justify-center">
           <p className="cursor-pointer font-bold">↑</p>
           <p>
-            {tempAxios.data.score !== null
-              ? tempAxios.data.score
+            {tempAxios.score !== null
+              ? tempAxios.score
               : "The value is not available"}
           </p>
           <p className="cursor-pointer font-bold">↓</p>
@@ -53,26 +64,24 @@ export default async function getData() {
                 <span className="text-[#777777] mr-2">
                   Posted by{" "}
                   <span className="font-sans">
-                    {tempAxios.data.by}{" "}
+                    {tempAxios.by}{" "}
                     <span className="ml-2 font-mono">
-                      {moment.unix(tempAxios.data.time).fromNow()}
+                      {moment.unix(tempAxios.time).fromNow()}
                     </span>
                   </span>
                 </span>
               }
               <br />
-              {tempAxios.data.title}
+              {tempAxios.title}
             </h1>
             <h1 className="break-words whitespace-normal min-[500px]:w-[500px] max-sm:text-[14px]">
               Sourse:{" "}
               <Link
                 className="break-words whitespace-normal"
-                href={
-                  tempAxios.data.url !== undefined ? tempAxios.data.url : "/"
-                }
+                href={tempAxios.url !== undefined ? tempAxios.url : "/"}
               >
-                {tempAxios.data.url !== undefined ? (
-                  tempAxios.data.url
+                {tempAxios.url !== undefined ? (
+                  tempAxios.url
                 ) : (
                   <span className="text-red-600">
                     The link is not available
@@ -81,11 +90,11 @@ export default async function getData() {
               </Link>
             </h1>
           </div>
-          <Link className="flex gap-1" href={`/comments/${tempAxios.data.id}`}>
+          <Link className="flex gap-1" href={`/comments/${tempAxios.id}`}>
             <img className="w-[25px]" src="/images/chat.png" alt="chat-icon" />
-            {tempAxios.data.descendants !== undefined ? (
+            {tempAxios.descendants !== undefined ? (
               <h2 className="text-[gray] max-sm:text-[14px]">
-                {tempAxios.data.descendants} comments
+                {tempAxios.descendants} comments
               </h2>
             ) : (
               <h2 className="text-[gray] max-sm:text-[14px]">0 comments</h2>
